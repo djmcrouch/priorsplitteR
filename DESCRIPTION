@@ -1,6 +1,6 @@
 Package: priorsplitteR
 Title: Prior splitting for estimation of Bigger or False Disovery Rates (BFDRs) and other applications
-Description: Uses poisson regression ('Lindsey's method') and expectation maximisation to fit constrained likelihood models to histogram data. Likelihood methods are constrained to enable 'prior splitting', fitting separate mixtures for variables that lie above and below thresholds. Estimating Bigger of False Discovery Rates (BFDRs) and false sign probabilities are two main uses.  
+Description: Uses poisson regression ('Lindsey's method') and expectation maximisation to fit constrained likelihood models to histogram data. Likelihood methods are constrained to enable 'prior splitting', fitting separate mixtures for observed values that have true values lying above and below thresholds. Estimating Bigger of False Discovery Rates (BFDRs) and false sign probabilities are two main uses.   
 Version: 1.0.1
 Date: 2022-01-31
 Authors@R: c(person(given="Daniel James Michael",family="Crouch", role=c("aut","cre"),
