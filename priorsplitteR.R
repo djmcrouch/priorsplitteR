@@ -107,14 +107,16 @@ predict.poissonRegMixture_altNull<-function(x){
 fit<-predict.poissonRegMixture_altNull(par);fit[is.na(fit)]=0
 print("Printing graph of fitted alt/null mixture distribution")
 #Put error bars on this fit
-png(paste0(outFileStem,"poissonMixtureFit_altNull.png"),width=1000,height=1000,res=400)
-plot(histogram,main=NULL,ylim=c(0,max(fit))*1.05)
+png(paste0(outFileStem,"poissonMixtureFit_altNull.png"),width=3000,height=3000,res=600)
+par(mar=c(3.6,4.1,1.1,1.1),mgp=c(2.5,1,0),cex.axis=0.7,cex.lab=0.7)
+plot(histogram,main=NULL,ylim=c(0,max(fit))*1.05,ylab="Count")
 points(x,fit[,1],col=2,type="l",lwd=2)
 points(x,fit[,2],col=3,type="l",lwd=2)
 points(x,fit[,3],col=4,type="l",lwd=2)
 dev.off()
-png(paste0(outFileStem,"poissonMixtureFit_altNull_mixingProp.png"),width=1000,height=1000,res=400)
-plot(histogram,main=NULL,ylim=c(0,max(fit))*1.05)
+png(paste0(outFileStem,"poissonMixtureFit_altNull_mixingProp.png"),width=3000,height=3000,res=600)
+par(mar=c(3.6,4.1,1.1,1.1),mgp=c(2.5,1,0),cex.axis=0.7,cex.lab=0.7)
+plot(histogram,main=NULL,ylim=c(0,max(fit))*1.05,ylab="Count")
 points(x,fit[,1],col=2,type="l",lwd=2)
 points(x,fit[,4],col=3,type="l",lwd=2)
 points(x,fit[,5],col=4,type="l",lwd=2)
@@ -136,11 +138,12 @@ print(paste0("Simulating ",nSim," variants from estimated distribution function.
 dist <-AbscontDistribution(d=altNull_Density,low1=min(midPoints),up1=max(midPoints)) #signature for a dist with pdf ~ twoGroupDensity
 rdist <- r(dist) # function to create random variates 
 sim=rdist(nSim)
-png(paste0(outFileStem,"poissonMixtureFit_altNull_altSim.png"),width=1000,height=1000,res=400)
+png(paste0(outFileStem,"poissonMixtureFit_altNull_altSim.png"),width=3000,height=3000,res=600)
+par(mar=c(3.6,4.1,1.1,1.1),mgp=c(2.5,1,0),cex.axis=0.7,cex.lab=0.7)
 x<-seq(min(midPoints),max(midPoints),by=0.01)
 y<-unlist(sapply(X=x,FUN=altNull_Density))
 yNull=dnorm(x,mean=0,sd=1)
-hist(sim,freq=FALSE,breaks=breakPoints,col=0,ylim=c(0,max(c(y,yNull))),main=NULL,xlab="",xlim=range(z))
+hist(sim,freq=FALSE,breaks=breakPoints,col=0,ylim=c(0,max(c(y,yNull))),main=NULL,xlab="",xlim=range(z),ylab="Count")
 lines(x,y,type='l',col="green")
 lines(x,yNull,type='l',col="blue")
 dev.off()
@@ -157,10 +160,11 @@ if(!is.null(simulationTruth)){
 	rand[rand==index]=sample(rand[rand!=index],size=sum(rand==index),replace=FALSE) #Replace ones where index and rand are the same, as this introduces a bias towards 'null' differences
 	deltaTrue=(beta[index]-beta[rand])/sqrt(s[index]^2+s[rand]^2)
 	trueDiff=(simulationTruth[index]-simulationTruth[rand])/sqrt(s[index]^2+s[rand]^2)
-	png(paste0(outFileStem,"poissonMixtureFit_altNull_diffs_simVersusReal.png"),width=1000,height=1000,res=400)
+	png(paste0(outFileStem,"poissonMixtureFit_altNull_diffs_simVersusReal.png"),width=3000,height=3000,res=600)
+	par(mar=c(3.6,4.1,1.1,1.1),mgp=c(2.5,1,0),cex.axis=0.7,cex.lab=0.7)
 	deltaHist=hist(c(delta,deltaTrue),breaks=breaks)
 	deltaHist1=hist(delta,breaks=deltaHist$breaks);deltaHist2=hist(deltaTrue,breaks=deltaHist$breaks) #For count range
-	hist(delta,breaks=deltaHist$breaks,col=rgb(0,0,1,alpha=0.5),main=NULL,xlab="Effect size differences",xlim=range(c(delta,deltaTrue)),ylim=1.2*c(0,max(c(deltaHist1$counts,deltaHist2$counts))),ylab="Counts")
+	hist(delta,breaks=deltaHist$breaks,col=rgb(0,0,1,alpha=0.5),main=NULL,xlab="Effect size differences",xlim=range(c(delta,deltaTrue)),ylim=1.2*c(0,max(c(deltaHist1$counts,deltaHist2$counts))),ylab="Count")
 	hist(deltaTrue,breaks=deltaHist$breaks,add=T,col=rgb(1,0,0,alpha=0.5))	
 	legend(x=min(c(delta,deltaTrue)),y=1.2*max(c(deltaHist1$counts,deltaHist2$counts)),col=c(rgb(0,0,1,alpha=0.5),rgb(1,0,0,alpha=0.5)),legend=c("Drawn directly from estimated alt distribution","Simulation truth alt differences"),pch=15)
 	dev.off()
@@ -172,10 +176,11 @@ rand=sample(rand,size=length(rand),replace=FALSE) #Shuffle order
 rand[rand==index]=sample(rand[rand!=index],size=sum(rand==index),replace=FALSE) #Replace ones where index and rand are the same, as this introduces a bias towards 'null' differences
 deltaTrue=(beta[index]-beta[rand])/sqrt(s[index]^2+s[rand]^2)
 trueDiff=(simulationTruth[index]-simulationTruth[rand])/sqrt(s[index]^2+s[rand]^2)
-png(paste0(outFileStem,"poissonMixtureFit_altNull_diffs_simVersusEstAlt.png"),width=1000,height=1000,res=400)
+png(paste0(outFileStem,"poissonMixtureFit_altNull_diffs_simVersusEstAlt.png"),width=3000,height=3000,res=600)
+par(mar=c(3.6,4.1,1.1,1.1),mgp=c(2.5,1,0),cex.axis=0.7,cex.lab=0.7)
 deltaHist=hist(c(delta,deltaTrue),breaks=breaks,plot=FALSE)
 deltaHist1=hist(delta,breaks=deltaHist$breaks,plot=FALSE);deltaHist2=hist(deltaTrue,breaks=deltaHist$breaks,plot=FALSE) #For count range
-hist(delta,breaks=deltaHist$breaks,col=rgb(0,0,1,alpha=0.5),main=NULL,xlab="Effect size differences",xlim=range(c(delta,deltaTrue)),ylim=1.2*c(0,max(c(deltaHist1$counts,deltaHist2$counts))),ylab="Counts")
+hist(delta,breaks=deltaHist$breaks,col=rgb(0,0,1,alpha=0.5),main=NULL,xlab="Effect size differences",xlim=range(c(delta,deltaTrue)),ylim=1.2*c(0,max(c(deltaHist1$counts,deltaHist2$counts))),ylab="Count")
 hist(deltaTrue,breaks=deltaHist$breaks,add=T,col=rgb(1,0,0,alpha=0.5))	
 legend(x=min(c(delta,deltaTrue)),y=1.2*max(c(deltaHist1$counts,deltaHist2$counts)),col=c(rgb(0,0,1,alpha=0.5),rgb(1,0,0,alpha=0.5)),legend=c("Drawn directly from estimated alt distribution","Empirically estimated alt distribution based on fdrs"),pch=15)
 dev.off()
@@ -334,15 +339,17 @@ predict.poissonRegMixture_twoPolynomial<-function(x){
 		}
 print("Printing graph of fitted two-polynomial mixture distribution")
 fit<-predict.poissonRegMixture_twoPolynomial(par);fit[is.na(fit)]=0
-png(paste0(outFileStem,"poissonMixtureFit_twoPolynomial.png"),width=1000,height=1000,res=400)
-plot(histogram,main=NULL,ylim=c(0,max(fit[,-(5:7)]))*1.05)
+png(paste0(outFileStem,"poissonMixtureFit_twoPolynomial.png"),width=3000,height=3000,res=600)
+par(mar=c(3.6,4.1,1.1,1.1),mgp=c(2.5,1,0),cex.axis=0.7,cex.lab=0.7)
+plot(histogram,main=NULL,ylim=c(0,max(fit[,-(5:7)]))*1.05,ylab="Count")
 points(x,fit[,1],col=2,type="l",lwd=2)
 points(x,fit[,2],col=3,type="l",lwd=2)
 points(x,fit[,3],col=5,type="l",lwd=2)
 points(x,fit[,4],col=4,type="l",lwd=2)
 dev.off()
-png(paste0(outFileStem,"poissonMixtureFit_twoPolynomial_mixingPropScaled.png"),width=1000,height=1000,res=400)
-plot(histogram,main=NULL,ylim=c(0,max(fit[,-(2:4)]))*1.05)
+png(paste0(outFileStem,"poissonMixtureFit_twoPolynomial_mixingPropScaled.png"),width=3000,height=3000,res=600)
+par(mar=c(3.6,4.1,1.1,1.1),mgp=c(2.5,1,0),cex.axis=0.7,cex.lab=0.7)
+plot(histogram,main=NULL,ylim=c(0,max(fit[,-(2:4)]))*1.05,ylab="Count")
 points(x,fit[,1],col=2,type="l",lwd=2)
 points(x,fit[,5],col=3,type="l",lwd=2)
 points(x,fit[,6],col=5,type="l",lwd=2)
@@ -371,8 +378,9 @@ deltaTrue=deltaTrue_simTruth;trueDiff=trueDiff_simTruth #Store for later
 keep=((deltaTrue<=max(histogram$breaks))&((deltaTrue>=min(histogram$breaks))))  #Avoids graphing problems
 deltaTrue=deltaTrue[keep];trueDiff=trueDiff[keep]
 deltaHist1=hist(delta,breaks=histogram$breaks,plot=FALSE);deltaHist2=hist(deltaTrue[trueDiff<0],breaks=histogram$breaks,plot=FALSE);deltaHist3=hist(deltaTrue[trueDiff>0],breaks=histogram$breaks,plot=FALSE) #For count range
-png(paste0(outFileStem,"poissonMixtureFit_twoPolynomial_mixingPropScaled_withSimAltDiffs.png"),width=1000,height=1000,res=400)
-plot(histogram,main=NULL,ylim=1.2*c(0,max(c(deltaHist1$counts,deltaHist2$counts,deltaHist3$counts))))
+png(paste0(outFileStem,"poissonMixtureFit_twoPolynomial_mixingPropScaled_withSimAltDiffs.png"),width=3000,height=3000,res=600)
+par(mar=c(3.6,4.1,1.1,1.1),mgp=c(2.5,1,0),cex.axis=0.7,cex.lab=0.7)
+plot(histogram,main=NULL,ylim=1.2*c(0,max(c(deltaHist1$counts,deltaHist2$counts,deltaHist3$counts))),ylab="Count")
 hist(deltaTrue[trueDiff>0],breaks=histogram$breaks,col=rgb(1,0,0,alpha=0.5),add=T)
 hist(deltaTrue[trueDiff<0],breaks=histogram$breaks,col=rgb(0,0,1,alpha=0.5),add=T)
 points(x,fit[,1],col=2,type="l",lwd=2)
@@ -387,8 +395,9 @@ deltaTrue=deltaTrue[rand];trueDiff=trueDiff[rand]
 keep=((deltaTrue<=max(histogram$breaks))&((deltaTrue>=min(histogram$breaks))))  #Avoids graphing problems
 deltaTrue=deltaTrue[keep];trueDiff=trueDiff[keep]
 deltaHist1=hist(delta,breaks=histogram$breaks,plot=FALSE);deltaHist2=hist(deltaTrue[trueDiff<0],breaks=histogram$breaks,plot=FALSE);deltaHist3=hist(deltaTrue[trueDiff>0],breaks=histogram$breaks,plot=FALSE) #For count range
-png(paste0(outFileStem,"poissonMixtureFit_twoPolynomial_mixingPropScaled_withEstAltDiffs.png"),width=1000,height=1000,res=400)
-plot(histogram,main=NULL,ylim=1.2*c(0,max(c(deltaHist1$counts,deltaHist2$counts,deltaHist3$counts))))
+png(paste0(outFileStem,"poissonMixtureFit_twoPolynomial_mixingPropScaled_withEstAltDiffs.png"),width=3000,height=3000,res=600)
+par(mar=c(3.6,4.1,1.1,1.1),mgp=c(2.5,1,0),cex.axis=0.7,cex.lab=0.7)
+plot(histogram,main=NULL,ylim=1.2*c(0,max(c(deltaHist1$counts,deltaHist2$counts,deltaHist3$counts))),ylab="Count")
 hist(deltaTrue[trueDiff>0],breaks=histogram$breaks,col=rgb(1,0,0,alpha=0.5),add=T)
 hist(deltaTrue[trueDiff<0],breaks=histogram$breaks,col=rgb(0,0,1,alpha=0.5),add=T)
 hist(deltaTrue[trueDiff==0],breaks=histogram$breaks,col=rgb(0,1,0,alpha=0.25),add=T)
