@@ -1,3 +1,31 @@
+#' BFDR.priorsplitteR() function by Daniel Crouch
+#' Estimates BFDR from a set of effect size estimates and standard errors. Effect size estimates are assumed to have normal sampling error.
+#' Returns local and tail area BFDRs, BDRs and FDRs. 
+#' See Crouch et al. 2022, https://doi.org/10.1101/2021.02.05.429962, for details.
+#' @param beta Vector of effect size estimates with normal sampling error. Must be supplied 
+#' @param s Vector of standard error estimates, assumed to be close to their true values. Must be supplied
+#' @param seed Seed for random number generation. Must be supplied
+#' @param excludeFromFit Vector of integers specifying the variables to exclude from distribution modelling
+#' @param simulationTruth Vector of true effect sizes if known from a simulation, for plotting
+#' @param outFileStem File name stem for output files. Must be supplied
+#' @param breaks Number of breaks in histogram for Poisson regression distribution modelling, default 100
+#' @param degree_altNull Degree of polynomial model for ANE model, default 6
+#' @param degree_doublePolynomial Degree of polynomial-like model for NUPE and NUPE-diff models, default 6
+#' @param nSim Number of simulated z-scores for NUPE and NUPE-diff models, default 5 million
+#' @param diffSampleSize Number of 'k' variables to sample for estimating pairwise posterior probabilities for SNP k exceeding focal SNP j in effect size, default 1000
+#' @param diffSampleSizeHighAcc Number of additional 'k' variables to sample for estimating pairwise posterior probabilities for SNP k exceeding focal SNP j in effect size, when estimated local bfdr_j<highAccThresh, default 9000 giving 9000+1000=10000 total samples
+#' @param highAccThresh Threshold for re-sampling variables to improve estimates of bfdr_j based on whether it is low enough to be potentially interesting, default 0.05
+#' @param blockSize Number of 'j' variables to vectorise bfdr_j for, default 1000. When more memory is available, blockSize can be increased with potential improvements in speed
+#' @param EMtol Vector of length 2 containing tolerances for likelihood convergence in EM algorithm (ANE and NUPE/NUPE-diff respectively), default c(1e-6,1e-6)
+#' @param nStop Number of consecutive EM iterations that must satisfy EM likelihood convergence tolerance before convergence is accepted, default 5.
+#' @param maxEMit Vector of length 2 containing maximum number of EM iterations before convergence is accepted, for ANE and NUPE/NUPE-diff respectively, default c(100000,100000). Estimates obtained when the maximum number of iterations are reached should be treated with caution
+#' @param ml.reltol Maximum likelihood tolerance, passed to constrOptim, default 1e-300
+#' @param outlierSD Variables with absolute z-scores greater than this threshold are removed from distribution modelling. For producing BFDR estimates, they are squashed to have absolute values no greater than the maximum value used for modelling. Default 15
+#' @param diffOutlierSD Pairwise effect estimate differences with absolute z-scores greater than this threshold are removed from distribution modelling. For producing BFDR estimates, they are squashed to have absolute values no greater than the maximum value used for modelling. Default NULL, which sets the threshold to outlierSD*1.5
+#' @param threads Number of threads for parallelising Bayesian computations for pairwise variable effect size comparisons, default 1. We recommended higher settings when multiple threads are available
+
+#' @export
+
 BFDR.priorsplitteR<-function(beta,s,seed,excludeFromFit=NULL,simulationTruth=NULL,outFileStem,breaks=100,degree_altNull=6,degree_doublePolynomial=6,nSim=5000000,diffSampleSize=1000,diffSampleSizeHighAcc=9000,highAccThresh=0.05,blockSize=10000,EMtol=c(1e-6,1e-6),nStop=5,maxEMit=c(100000,100000),ml.reltol=1e-300,outlierSD=15,diffOutlierSD=NULL,threads=1){
 library(distr);library(parallel);library(dplyr)
 set.seed(seed)
