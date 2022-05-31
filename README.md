@@ -5,6 +5,6 @@ R package for estimating prior densities above and below thresholds, using f-mod
 library(devtools)  
 install_github("djmcrouch/priorsplitteR")
 
-#Run (in R):
-#Beta and s should be vectors of the same length. Seed is a scalar.
+#Run (in R):  
+#Beta and s should be vectors of the same length. Seed is a scalar.  
 BFDR.priorsplitteR(beta=beta,s=s,seed=seed,outFileStem="outFileStem")
