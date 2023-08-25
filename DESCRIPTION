@@ -1,14 +1,23 @@
 Package: priorsplitteR
-Title: What the Package Does (One Line, Title Case)
-Version: 1.0.1
+Title: priorityFDR estimation via empirical Bayesian modelling of effect size differences
+Version: 1.0.2
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Daniel",
+           family = "Crouch",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "daniel.crouch@well.ox.ac.uk",
+           comment = c(ORCID = "0000-0003-4122-9648"))
+Description: Performs priorityFDR estimation on a multivariate dataset of summary statistics (effect sizes and standard errors). Returns tail area and local estimates of priorityFDRs, effect priorities and FDRs. 
+License: GPL-3.0
 Encoding: UTF-8
-LazyData: true
+LazyData: TRUE
+Imports: 
+    distr,
+    parallel,
+    dplyr,
+    alabama, 
+    compiler,
+    foreach,
 RoxygenNote: 6.1.1
+Depends: 
+    R (>= 3.6.1)
