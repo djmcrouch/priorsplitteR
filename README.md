@@ -2,6 +2,7 @@
 R package for estimating prior densities above and below thresholds, using f-modelling. Includes priorityFDR estimation. Paper: https://doi.org/10.1101/2021.02.05.429962  
 
 #Installation (In R):  
+
 library(devtools)  
 install_github("djmcrouch/priorsplitteR")
 
@@ -9,15 +10,18 @@ install_github("djmcrouch/priorsplitteR")
 #It also contains z=beta/s, which gives chi-square P values for each variable using pchisq(z^2,df=1,lower.tail=FALSE). 
 #True effects are provided, both unscaled (true_beta), and on the z scale, true_beta/s (true_z), if users wish to compare these with the estimated quantities.
 
+
 library(priorsplitteR)  
 colnames(simulatedData)  
 #"beta"  "s" "z" "true_beta" "true_z"
 
 
 #Pseudo-random numbers are used during model fitting and estimation. To ensure results are fully reproducible, we require users to specify a seed value, rather than leaving R to derive it from the system clock.
+
 seed<-12345
 
 #Run priorityFDR estimation. Beta and s need to be vectors of the same length. A filename stem needs to be specified to outFileStem. 
+
 priorityFDR.out<-priorityFDR.priorsplitteR(
 
 beta=simulatedData[,'beta'],
@@ -42,13 +46,15 @@ blockSize=2000
 #The argument blockSize determines how many variables are processed at once during the second phase. On a computing cluster, we recommended not specifying this argument so it can be set by the package. On a personal computer, it should be set sufficiently low so as to not cause memory errors in R, e.g. around 500-3000.
 
 #The main output of interest in the returned object is results, giving local and tail-area estimates of priorityFDRs, effect priorities and FDRs:
+
 names(priorityFDR.out$results). 
 
 #"results"      "ANEfit"       "NNPEDfit"     "NNPEfit"      "scaleFactors"      "pi"           "outputLog" 
 
 #The other elements are parameter estimates and other values produced during each phase of the modelling/estimation process, plus an output log. The value in priorityFDR.out$pi will be of interest to some users, containing the proportion of variables estimated to have null effects (indistinguishable from zero), plus the proportion of alt (non-null) true effects estimated to be positive and negative. Subtracting the latter two quantities from 1 gives the proportion of alt variables that have true effects that are too uncertain to be assigned a sign, despite being from the alt distribution.
 
-#The volcanoPlot function can be used to create a quick graphing of effect sizes versus significance, labelled by priorityFDRs and FDRs, using the estimates for each variable in priorityFDR.out$results. This is the main way we visualise how significance and effect size are traded off during priorityFDR-based variable selection.
+#The volcanoPlot function can be used to create a quick graphing of effect sizes versus significance, labelled by priorityFDRs and FDRs, using the estimates for each variable in priorityFDR.out$results. This is the main way we visualise how significance and effect size are traded off during priorityFDR-based variable selection.  
+
 volcanoPlot(
 
 beta=simulatedData[,'beta'],
