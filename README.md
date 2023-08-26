@@ -9,8 +9,8 @@ install_github("djmcrouch/priorsplitteR")
 #It also contains z=beta/s, which gives chi-square P values for each variable using pchisq(z^2,df=1,lower.tail=FALSE). 
 #True effects are provided, both unscaled (true_beta), and on the z scale, true_beta/s (true_z), if users wish to compare these with the estimated quantities.
 
-library(priorsplitteR)
-colnames(simulatedData) 
+library(priorsplitteR)  
+colnames(simulatedData)  
 #"beta"  "s" "z" "true_beta" "true_z"
 
 
