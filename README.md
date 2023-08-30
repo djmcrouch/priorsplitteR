@@ -30,7 +30,7 @@ colnames(simulatedData)
 seed<-12345
 ```
 
-#Run priorityFDR estimation. Beta and s need to be vectors of the same length. A filename stem needs to be specified to outFileStem. 
+#Run priorityFDR estimation. ```beta``` and ```s``` need to be vectors of the same length. A filename stem needs to be specified to outFileStem. 
 
 ```
 priorityFDR.out<-priorityFDR.priorsplitteR(
@@ -57,12 +57,17 @@ blockSize=2000
  <br/><br/>
 #The argument ```blockSize``` determines how many variables are processed at once during the second phase. On a computing cluster, we recommended not specifying this argument so it can be set by the package. On a personal computer, it should be set sufficiently low so as to not cause memory errors in R, e.g. around 500-3000.  
    <br/><br/>
-#The main output of interest in the returned object is results, giving local and tail-area estimates of priorityFDRs, effect priorities and FDRs:
+#The main output of interest in the returned object is ```results```, giving local and tail-area estimates of priorityFDRs, effect priorities and FDRs:
 
 ```
 names(priorityFDR.out$results)
 ```
+#Output:  
+#"localpriorityFDR"   "localpriorityFDRinc"   "localFDR"   "localEffectPriority"   "tailpriorityFDR"   "tailpriorityFDRinc"   "tailFDR"   "tailEffectPriority"
 
+```
+names(priorityFDR.out)
+```
 #Ouput:  
 #"results"      "ANEfit"       "NNPEDfit"     "NNPEfit"      "scaleFactors"      "pi"           "outputLog" 
 <br/><br/>
