@@ -9,7 +9,7 @@ library(devtools)
 install_github("djmcrouch/priorsplitteR")
 ```
 
-#Simulated example data is loaded with the priorsplitteR package. This contains effect estimates (beta), and their standard errors (s) required for priorityFDR estimation.  
+#Simulated example data is loaded with the priorsplitteR package. This contains effect estimates (```beta```), and their standard errors (```s```) required for priorityFDR estimation.  
 
 #It also contains ```z=beta/s```, which gives chi-square P values for each variable using ```pchisq(z^2,df=1,lower.tail=FALSE)```.  
 
@@ -30,7 +30,7 @@ colnames(simulatedData)
 seed<-12345
 ```
 
-#Run priorityFDR estimation. ```beta``` and ```s``` need to be vectors of the same length. A filename stem needs to be specified to outFileStem. 
+#Run priorityFDR estimation. ```beta``` and ```s``` need to be vectors of the same length. A filename stem needs to be specified to ```outFileStem```. 
 
 ```
 priorityFDR.out<-priorityFDR.priorsplitteR(
