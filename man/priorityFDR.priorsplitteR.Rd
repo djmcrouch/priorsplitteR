@@ -7,20 +7,18 @@ Estimates priorityFDRs from a set of effect size estimates and standard errors. 
 Returns local and tail area priorityFDRs, effect priorities and FDRs. 
 See Crouch et al. 2022, https://doi.org/10.1101/2021.02.05.429962, for details.}
 \usage{
-priorityFDR.priorsplitteR(beta, s, seed, excludeFromFit = NULL,
-  simulationTruth = NULL, outFileStem, breaks = 50,
-  degree_altNull = 10, degree_doublePolynomial = 6, nSim = 5e+06,
-  diffSampleSize = 500, diffSampleSizeHighAcc = 4500,
-  highAccThresh = 0.02, blockSize = NULL, EMtol = c(1e-08, 0.001),
-  nStop = 5, maxEMit = c(1e+05, 10000), ml.reltol = 1e-300,
-  outlierSD = 10, diffOutlierSD = NULL, truncatedNull = NULL,
-  nullTol = 1e-300, threads = 1, modelOnly = FALSE,
-  performOneTail = FALSE)
+priorityFDR.priorsplitteR(beta, se, seed, excludeFromFit = NULL,
+  simulationTruth = NULL, outFileStem, breakSize = NULL,
+  degree_altNull = 12, degree_doublePolynomial = NULL,
+  degree_all = 12, nSim = 1e+07, diffSampleSize = 1000,
+  diffSampleSizeHighAcc = 9000, highAccThresh = 0.05,
+  blockSize = NULL, EMtol = c(5e-04, 5e-04), nStop = 3,
+  maxEMit = c(1e+05, 1000), ml.reltol = 1e-300, outlierSD = NULL,
+  diffOutlierSD = NULL, truncatedNull = NULL, threads = 1,
+  modelOnly = FALSE, performOneTail = FALSE)
 }
 \arguments{
 \item{beta}{Vector of effect size estimates with normal sampling error. Must be supplied}
-
-\item{s}{Vector of standard error estimates, assumed to be close to their true values. Must be supplied}
 
 \item{seed}{Seed for random number generation. Must be supplied}
 
@@ -30,17 +28,17 @@ priorityFDR.priorsplitteR(beta, s, seed, excludeFromFit = NULL,
 
 \item{outFileStem}{File name stem for output files. Must be supplied}
 
-\item{breaks}{Number of breaks in histogram for Poisson regression distribution modelling, default 50}
+\item{breakSize}{Width of bin, on the Z-score scale, in histogram for Poisson regression distribution modelling. Default 0.5.}
 
 \item{degree_altNull}{Degree of polynomial model for ANE model, default 10}
 
-\item{degree_doublePolynomial}{Degree of polynomial-like model for NUPE and NUPE-diff models, default 6}
+\item{degree_doublePolynomial}{Degree of polynomial-like model for NUPE and NUPE-diff models. Default is to use half the number of parameters used to fit the likelihood for Tweedie estimation (ceiling value if this is not round)}
 
-\item{nSim}{Number of simulated z-scores for NUPE and NUPE-diff models, default 5 million}
+\item{nSim}{Number of simulated z-scores to resample for NUPE-diff models, default 10 times the number of variables}
 
-\item{diffSampleSize}{Number of 'k' variables to sample for estimating pairwise posterior probabilities for SNP k exceeding focal SNP j in effect size, default 500}
+\item{diffSampleSize}{Number of 'k' variables to sample for estimating pairwise posterior probabilities for SNP k exceeding focal SNP j in effect size, default 1000}
 
-\item{diffSampleSizeHighAcc}{Number of additional 'k' variables to sample for estimating pairwise posterior probabilities for SNP k exceeding focal SNP j in effect size, when estimated local effectPriority_j<highAccThresh, default 4500 giving 4500+500=5000 total samples}
+\item{diffSampleSizeHighAcc}{Number of additional 'k' variables to sample for estimating pairwise posterior probabilities for SNP k exceeding focal SNP j in effect size, when estimated local effectPriority_j<highAccThresh, default 4000 giving 4000+500=50000 total samples}
 
 \item{highAccThresh}{Threshold for re-sampling variables to improve estimates of priorityfdr_j based on whether it is low enough to be potentially interesting, default 0.02}
 
@@ -54,19 +52,19 @@ priorityFDR.priorsplitteR(beta, s, seed, excludeFromFit = NULL,
 
 \item{ml.reltol}{Maximum likelihood tolerance, passed to constrOptim, default 1e-300}
 
-\item{outlierSD}{Variables with absolute z-scores greater than this threshold are removed from distribution modelling. For producing priorityFDR estimates, they are squashed to have absolute values no greater than the maximum value used for modelling. Default 15}
+\item{outlierSD}{Variables with absolute z-scores greater than this threshold are removed from distribution modelling. For producing priorityFDR estimates, they are squashed to have absolute values no greater than the maximum value used for modelling. Defaults to either 12, or the 99.9 percent quantile of absolute Z-scores (where n is the number of variables), if the latter is larger, with a default maximum of 20 imposed. Modelling the likelihoods when there are values beyond 20 becomes difficult}
 
-\item{diffOutlierSD}{Pairwise effect estimate differences with absolute z-scores greater than this threshold are removed from distribution modelling. For producing priorityFDR estimates, they are squashed to have absolute values no greater than the maximum value used for modelling. Default NULL, which sets the threshold to outlierSD*1.5}
+\item{diffOutlierSD}{Pairwise effect estimate differences with absolute z-scores greater than this threshold are removed from distribution modelling. For producing priorityFDR estimates, they are squashed to have absolute values no greater than the maximum value used for modelling. Default NULL, which sets the threshold to either outlierSD or the 99.9 percent quantile of absolute deltas, whichever is larger.}
 
 \item{truncatedNull}{Range within which observed estimates are known a priori to exist, a vector of length 2. For example, if it is known that estimates can only be positive, specify c(0,Inf). Default NULL for range truncation.}
-
-\item{nullTol}{Values with null densities equal to or below this value are omitted from fitting and assumed to have either positive or negative true effects (for positive and negative estimates respectively) with posterior probability 1, and similarly for effect differences. The estimation prodecure fits a model as a ratio against the null distribution, so when null density is recorded as zero no meaningful fit can be produced, and when it is close to zero may be unreliable.}
 
 \item{threads}{Number of threads for parallelising Bayesian computations for pairwise variable effect size comparisons, default 1. We recommended higher settings when multiple threads are available}
 
 \item{modelOnly}{If TRUE, only model estimation is performed, returning estimated parameters. PriorityFDRs, FDRs and effect priorities are not computed for each variant}
 
 \item{performOneTail}{If true, one-tail inclusive priorityFDRs are computed, estimating the probability that a variable's true effect, rather than effect size, is exceeded by a randomly chosen variant. This requires additional computational time but the results can be used to estimate the prior distribution of effects using priorEst.priorsplitteR}
+
+\item{s}{Vector of standard error estimates, assumed to be close to their true values. Must be supplied}
 }
 \description{
 priorityFDR.priorsplitteR() function by Daniel Crouch

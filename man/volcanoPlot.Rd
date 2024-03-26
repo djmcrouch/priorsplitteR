@@ -6,7 +6,7 @@
 Produces volcano plots with points coloured by priorityFDRs and FDRs, using output from priorityFDR.priorsplitteR
 See Crouch et al. 2022, https://doi.org/10.1101/2021.02.05.429962, for details.}
 \usage{
-volcanoPlot(beta, s, label, priorityFDR.out, FDRthresh = 0.01,
+volcanoPlot(beta, se, label, priorityFDR.out, FDRthresh = 0.01,
   priorityFDRthresh = 0.01, priorityFDRmeasure = "tailpriorityFDR",
   FDRmeasure = "tailFDR")
 }

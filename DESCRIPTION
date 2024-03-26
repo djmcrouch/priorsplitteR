@@ -1,6 +1,6 @@
 Package: priorsplitteR
 Title: priorityFDR estimation via empirical Bayesian modelling of effect size differences
-Version: 1.0.2
+Version: 1.0.3
 Authors@R: 
     person(given = "Daniel",
            family = "Crouch",
